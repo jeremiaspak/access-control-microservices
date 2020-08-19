@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS door CASCADE;
+
+CREATE TABLE door (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  floor VARCHAR(3) NOT NULL,
+  room VARCHAR(50) NOT NULL
+);
+
+INSERT INTO door (floor, room) VALUES
+  ('11', '11B35'),
+  ('3', '3A11');

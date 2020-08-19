@@ -68,6 +68,70 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Find All Doors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/porta",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"porta"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Door By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/porta/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"porta",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Door",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"andar\": \"2\",\n    \"sala\": \"2B35\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/porta",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"porta"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
