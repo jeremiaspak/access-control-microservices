@@ -8,9 +8,13 @@ import com.accesscontrol.access.entity.Access;
 import com.accesscontrol.access.exceptions.AccessNotFoundException;
 import com.accesscontrol.access.exceptions.CustomerNotFoundException;
 import com.accesscontrol.access.exceptions.DoorNotFoundException;
+import com.accesscontrol.access.model.AccessLog;
+import com.accesscontrol.access.producer.AccessProducer;
 import com.accesscontrol.access.repository.AccessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Random;
 
 @Service
 public class AccessService {
@@ -24,6 +28,9 @@ public class AccessService {
   @Autowired
   private DoorClient doorClient;
 
+  @Autowired
+  private AccessProducer accessProducer;
+
   public Iterable<Access> findAll() {
     return repository.findAll();
   }
@@ -35,9 +42,19 @@ public class AccessService {
   public Access getByCustomerIdAndDoorId(
     Long customerId,
     Long doorId
-  ) throws AccessNotFoundException {
-    return repository.getByCustomerIdAndDoorId(customerId, doorId)
+  ) throws CustomerNotFoundException, DoorNotFoundException, AccessNotFoundException {
+    GetCustomerResponse customerResponse = customerClient.getById(customerId);
+    GetDoorResponse doorResponse = doorClient.getById(doorId);
+    Access access = repository.getByCustomerIdAndDoorId(customerId, doorId)
       .orElseThrow(AccessNotFoundException::new);
+
+    AccessLog log = new AccessLog();
+    log.setCustomerId(access.getCustomerId());
+    log.setDoorId(access.getDoorId());
+    log.setAuthorized(isCustomerAuthorized());
+    accessProducer.publish(log);
+
+    return access;
   }
 
   public Access create(
@@ -59,5 +76,10 @@ public class AccessService {
     GetCustomerResponse customerResponse = customerClient.getById(customerId);
     GetDoorResponse doorResponse = doorClient.getById(doorId);
     return repository.deleteByCustomerIdAndDoorId(customerId, doorId);
+  }
+
+  private Boolean isCustomerAuthorized() {
+    Random random = new Random();
+    return random.nextBoolean();
   }
 }
